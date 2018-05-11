@@ -1,0 +1,26 @@
+version: '3'
+services:
+  app:
+    build: .
+    volumes:
+      - ./:/app
+    depends_on:
+      - postgres
+      - rabbitmq
+
+  postgres:
+    image: postgres:10
+    volumes:
+      - ./.data/postgres:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:3.7-management
+    hostname: "rabbit"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    labels:
+      NAME: "rabbitmq"
+    volumes:
+      - ./rabbitmq-isolated.conf:/etc/rabbitmq/rabbitmq.config
+      
