@@ -5,5 +5,5 @@ config :users_service, UsersService.Repo,
   database: "users_service_repo_test",
   username: "postgres",
   password: "postgres",
-  hostname: "localhost",
+  hostname: "postgres",
   pool: Ecto.Adapters.SQL.Sandbox

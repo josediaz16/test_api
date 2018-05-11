@@ -5,4 +5,4 @@ config :users_service, UsersService.Repo,
   database: "users_service_repo",
   username: "postgres",
   password: "postgres",
-  hostname: "localhost"
+  hostname: "postgres"
