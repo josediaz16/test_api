@@ -29,7 +29,7 @@ defmodule UsersService.User do
           :password_hash,
           Comeonin.Bcrypt.hashpwsalt(password)
         )
-        _ -> changeset
+      _ -> changeset
     end
   end
 end
