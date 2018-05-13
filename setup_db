@@ -1,0 +1,11 @@
+#!/bin/bash
+
+psql -U postgres -h postgres -c "ALTER USER postgres PASSWORD 'postgres';"
+
+echo -e "Setup for dev database\n"
+mix ecto.create
+mix ecto.migrate
+
+echo -e "Setup for test database\n"
+MIX_ENV=test mix ecto.create
+MIX_ENV=test mix ecto.migrate
