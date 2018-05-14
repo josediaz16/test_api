@@ -1,5 +1,6 @@
 defmodule UsersService.User do
   use Ecto.Schema
+  @derive {Poison.Encoder, except: [:__meta__, :password, :password_confirmation, :password_hash]}
 
   schema "users" do
     field :name,                  :string

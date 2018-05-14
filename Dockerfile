@@ -21,4 +21,6 @@ COPY . /app
 WORKDIR /app
 
 RUN mix deps.get
+RUN mix local.rebar --force
+RUN mix deps.compile
 CMD mix test

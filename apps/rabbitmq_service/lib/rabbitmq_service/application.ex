@@ -1,4 +1,4 @@
-defmodule UsersService.Application do
+defmodule RabbitmqService.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -8,15 +8,13 @@ defmodule UsersService.Application do
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
-      UsersService.Repo,
-      {RabbitmqService.RpcServer, [queue_name: "users_queue", server_name: :users_server, handler: &UsersService.UserManager.create/1]}
-      # Starts a worker by calling: UsersService.Worker.start_link(arg)
-      # {UsersService.Worker, arg},
+      # Starts a worker by calling: RabbitmqService.Worker.start_link(arg)
+      # {RabbitmqService.Worker, arg},
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    opts = [strategy: :one_for_one, name: UsersService.Supervisor]
+    opts = [strategy: :one_for_one, name: RabbitmqService.Supervisor]
     Supervisor.start_link(children, opts)
   end
 end
