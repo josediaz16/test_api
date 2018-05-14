@@ -6,5 +6,8 @@ config :web_app, WebApp.Endpoint,
   http: [port: 4001],
   server: false
 
+config :phoenix_integration,
+  endpoint: WebApp.Endpoint
+
 # Print only warnings and errors during test
 config :logger, level: :warn
