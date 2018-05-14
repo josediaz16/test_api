@@ -29,8 +29,10 @@ defmodule RabbitmqService.RpcClient do
   def push_to_queue(payload, {channel, queue_name, callback_queue}) do
     Basic.consume(channel, callback_queue, nil, no_ack: false)
     correlation_id = get_correlation_id()
+    {:ok, str_payload} = payload
+      |> Poison.encode
 
-    Basic.publish(channel, "", queue_name, payload, reply_to: callback_queue, correlation_id: correlation_id)
+    Basic.publish(channel, "", queue_name, str_payload, reply_to: callback_queue, correlation_id: correlation_id)
     wait_for_messages(channel, correlation_id)
   end
 
