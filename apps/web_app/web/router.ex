@@ -21,7 +21,9 @@ defmodule WebApp.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", WebApp do
-  #   pipe_through :api
-  # end
+  scope "/api/v1", WebApp do
+    pipe_through :api
+
+    resources "/users", Api.UserController, only: [:create], as: "api_user"
+  end
 end
