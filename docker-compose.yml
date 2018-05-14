@@ -2,11 +2,15 @@ version: '3'
 services:
   app:
     build: .
+    entrypoint: ./start.sh
+    command: mix phx.server
     volumes:
       - ./:/app
     depends_on:
       - postgres
       - rabbitmq
+    ports:
+      - "4000:4000"
 
   postgres:
     image: postgres:10

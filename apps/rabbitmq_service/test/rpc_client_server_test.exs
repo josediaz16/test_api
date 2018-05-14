@@ -11,8 +11,7 @@ defmodule RabbitmqRpcClientServerTest do
     RpcServer.start_link(queue_name: "test_queue", server_name: :test_server, handler: &dummy_function/1)
     RpcClient.start_link(queue_name: "test_queue", client_name: :test_client)
 
-    {:ok, payload} = %{name: "Ross", job: "Dinosaurs"}
-      |> Poison.encode
+    payload = %{name: "Ross", job: "Dinosaurs"}
 
     response = RpcClient.push_job(:test_client, payload)
 

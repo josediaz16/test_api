@@ -14,12 +14,18 @@ RUN apt-get install libssl1.0.0 -y
 RUN apt-get install libpq-dev libpq5 -y
 RUN apt-get install postgresql-client-10 -y
 
+RUN curl -sL https://deb.nodesource.com/setup_8.x | bash -
+RUN apt-get install -y nodejs
+
+RUN apt-get install -y inotify-tools
+
 RUN mix local.hex --force
 
 RUN mkdir /app
 COPY . /app
 WORKDIR /app
 
+RUN mix archive.install https://github.com/phoenixframework/archives/raw/master/phx_new.ez --force
 RUN mix deps.get
 RUN mix local.rebar --force
 RUN mix deps.compile

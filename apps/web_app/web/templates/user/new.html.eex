@@ -1,0 +1,50 @@
+<h1>New User</h1>
+
+<%= form_for @conn, user_path(@conn, :create), [as: :user], fn f-> %>
+  <div class="form-group">
+    <label for="user[email]">Email</label>
+    <%= text_input f, :email, value: @changeset[:email], class: "form-control" %>
+    <%= error_span @errors, :email %>
+  </div>
+
+  <div class="form-group">
+    <label for="user[name]">Name</label>
+    <%= text_input f, :name, value: @changeset[:name], class: "form-control" %>
+    <%= error_span @errors, :name%>
+  </div>
+
+  <div class="form-group">
+    <label for="user[phone_number]">Phone Number</label>
+    <%= text_input f, :phone_number, value: @changeset[:phone_number], class: "form-control" %>
+    <%= error_span @errors, :phone_number%>
+  </div>
+
+  <div class="form-group">
+    <label for="user[password]">Password</label>
+    <%= password_input f, :password, class: "form-control" %>
+    <%= error_span @errors, :password%>
+  </div>
+
+  <div class="form-group">
+    <label for="user[password]">Password Confirmation</label>
+    <%= password_input f, :password_confirmation, class: "form-control" %>
+    <%= error_span @errors, :password_confirmation%>
+  </div>
+
+  <div class="form-group">
+    <label for="user[country]">Country</label>
+    <%= text_input f, :country, value: @changeset[:country], class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <label for="user[city]">City</label>
+    <%= text_input f, :city, value: @changeset[:city], class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <label for="user[address]">Address</label>
+    <%= text_input f, :address, value: @changeset[:address], class: "form-control" %>
+  </div>
+
+  <%= submit "Save" %>
+<% end %>

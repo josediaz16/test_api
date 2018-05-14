@@ -23,7 +23,7 @@ defmodule WebApp.Mixfile do
   def application do
     [
       mod: {WebApp, []},
-      extra_applications: [:logger]
+      extra_applications: [:logger, :users_service]
     ]
   end
 
@@ -42,7 +42,9 @@ defmodule WebApp.Mixfile do
       {:phoenix_live_reload, "~> 1.0", only: :dev},
       {:gettext, "~> 0.11"},
       {:cowboy, "~> 1.0"},
-      {:rabbitmq_service, in_umbrella: true}
+      {:phoenix_integration, "~> 0.5", only: :test},
+      {:rabbitmq_service, in_umbrella: true},
+      {:users_service, in_umbrella: true}
     ]
   end
 end
