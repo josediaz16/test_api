@@ -2,28 +2,28 @@ defmodule RabbitmqService.RpcServer do
   use GenServer
   use AMQP
 
-  def start_link(handler) do
-    GenServer.start_link(__MODULE__, handler, name: :rpc_server)
+  def start_link(queue_name: queue_name, server_name: server_name, handler: handler) do
+    GenServer.start_link(__MODULE__, {queue_name, handler}, name: server_name)
   end
 
-  def init(handler) do
+  def init({queue_name, handler}) do
     {:ok, conn} = Connection.open(host: "rabbitmq")
     {:ok, channel} = Channel.open(conn)
 
-    Queue.declare(channel, "rpc_queue")
+    Queue.declare(channel, queue_name)
     Basic.qos(channel, prefetch_count: 1)
-    Basic.consume(channel, "rpc_queue")
+    Basic.consume(channel, queue_name)
 
     {:ok, {channel, handler}}
   end
 
   # Sent by the broker when the consumer is unexpectedly cancelled (such as after a queue deletion)
-  def handle_info({:basic_cancel, %{consumer_tag: consumer_tag}}, chan) do
+  def handle_info({:basic_cancel, %{consumer_tag: _consumer_tag}}, chan) do
     {:stop, :normal, chan}
   end
 
   # Confirmation sent by the broker to the consumer process after a Basic.cancel
-  def handle_info({:basic_cancel_ok, %{consumer_tag: consumer_tag}}, chan) do
+  def handle_info({:basic_cancel_ok, %{consumer_tag: _consumer_tag}}, chan) do
     {:noreply, chan}
   end
 

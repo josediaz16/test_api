@@ -2,35 +2,35 @@ defmodule RabbitmqService.RpcClient do
   use GenServer
   use AMQP
 
-  def start_link do
-    GenServer.start_link(__MODULE__, [], name: :rpc_client)
+  def start_link(queue_name: queue_name, client_name: client_name) do
+    GenServer.start_link(__MODULE__, queue_name, name: client_name)
   end
 
-  def init(_opts) do
+  def init(queue_name) do
     {:ok, conn} = Connection.open(host: "rabbitmq")
     {:ok, channel} = Channel.open(conn)
 
-    {:ok, %{queue: queue_name}} = Queue.declare(channel, "", exclusive: true)
-    {:ok, {channel, queue_name}}
+    {:ok, %{queue: callback_queue}} = Queue.declare(channel, "", exclusive: true)
+    {:ok, {channel, queue_name, callback_queue}}
   end
 
-  def push_job(payload) do
-    GenServer.call(:rpc_client, {:push_job, payload})
+  def push_job(client_name, payload) do
+    GenServer.call(client_name, {:push_job, payload})
   end
 
   def handle_call({:push_job, payload}, _from, state) do
-    {:reply, cosito(payload, state), state}
+    {:reply, push_to_queue(payload, state), state}
   end
 
   def handle_info({:basic_consume_ok, _}, state) do
     {:noreply, state} 
   end
 
-  def cosito(payload, {channel, queue_name}) do
-    Basic.consume(channel, queue_name, nil, no_ack: false)
+  def push_to_queue(payload, {channel, queue_name, callback_queue}) do
+    Basic.consume(channel, callback_queue, nil, no_ack: false)
     correlation_id = get_correlation_id()
 
-    Basic.publish(channel, "", "rpc_queue", payload, reply_to: queue_name, correlation_id: correlation_id)
+    Basic.publish(channel, "", queue_name, payload, reply_to: callback_queue, correlation_id: correlation_id)
     wait_for_messages(channel, correlation_id)
   end
 
